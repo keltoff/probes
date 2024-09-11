@@ -1,4 +1,8 @@
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+use godot::{builtin::GString, prelude::{Export, GodotConvert, Var}};
+
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, GodotConvert, Var, Export)]
+#[godot(via = GString)]
 pub enum Turn {
     Left,
     Right,
