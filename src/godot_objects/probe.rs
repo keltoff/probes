@@ -59,11 +59,11 @@ impl Probe {
                 self.position.make_turn(turn);
             },
             Turn::Front => {
-                self.motion = Some(Motion::forward_motion(self.position, move_duration));
+                self.motion = Some(Motion::forward_motion(self.position, false, move_duration));
                 self.position.forward(); // needs to be after 
             },
             Turn::Back => {
-                self.motion = Some(Motion::backward_motion(self.position, move_duration));
+                self.motion = Some(Motion::backward_motion(self.position, false, move_duration));
                 self.position.backward(); // needs to be after 
             },
         }
@@ -113,5 +113,10 @@ impl Probe {
     fn reset(&mut self) {
         self.position = Pos::default();
         self.update_position();
+    }
+
+    #[func]
+    fn bonk(&mut self) {
+        self.motion = Some(Motion::forward_motion(self.position, true, 0.5));
     }
 }

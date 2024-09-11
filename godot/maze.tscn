@@ -30,6 +30,8 @@ func _input(event):
 		
 	if event.is_action_pressed(\"Reset\"):
 		self.reset()
+	if event.is_action_pressed(\"Interact\"):
+		self.bonk()
 
 	#print(self.transform)
 	#$LabelPos.text = self.transform;

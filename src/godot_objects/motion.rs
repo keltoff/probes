@@ -7,20 +7,21 @@ pub struct Motion {
     from: Transform3D,
     to: Transform3D,
     length: f32,
-    progress: f32
+    progress: f32,
+    revert: bool,
 }
 
 impl Motion {
-    pub fn forward_motion(pos: Pos, length: f32) -> Motion {
-        Motion{ from: pos.to_transform(), to: pos.shifted(Turn::Front).to_transform(), length, progress: 0. }
+    pub fn forward_motion(pos: Pos, bonk: bool, length: f32) -> Motion {
+        Motion{ from: pos.to_transform(), to: pos.shifted(Turn::Front).to_transform(), length, progress: 0., revert: bonk }
     }
 
-    pub fn backward_motion(pos: Pos, length: f32) -> Motion {
-        Motion{ from: pos.to_transform(), to: pos.shifted(Turn::Back).to_transform(), length, progress: 0. }
+    pub fn backward_motion(pos: Pos, bonk: bool, length: f32) -> Motion {
+        Motion{ from: pos.to_transform(), to: pos.shifted(Turn::Back).to_transform(), length, progress: 0., revert: bonk }
     }
 
     pub fn turn_motion(pos: Pos, turn: Turn, length: f32) -> Motion {
-        Motion { from: pos.to_transform(), to: pos.turned(turn).to_transform(), length, progress: 0. }
+        Motion { from: pos.to_transform(), to: pos.turned(turn).to_transform(), length, progress: 0., revert: false  }
     }
 
     pub fn finished(&self) -> bool {
@@ -32,7 +33,12 @@ impl Motion {
         if self.progress > self.length {
             self.to
         } else {
-            self.from.interpolate_with(&self.to, self.progress / self.length)
+            let mut  progress = self.progress / self.length;
+            if self.revert && progress > 0.5 {
+                progress = 1. - progress;
+            }
+
+            self.from.interpolate_with(&self.to, progress)
         }
     }
 }
