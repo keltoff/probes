@@ -19,9 +19,9 @@ impl crate::geometry::Orientation {
             Direction::North => {
                 let roll = match ori.normal() {
                 Direction::North => todo!(),
-                Direction::West => -f32::consts::FRAC_PI_2,
+                Direction::West => f32::consts::FRAC_PI_2,
                 Direction::South => todo!(),
-                Direction::East => f32::consts::FRAC_PI_2,
+                Direction::East => -f32::consts::FRAC_PI_2,
                 Direction::Up => 0.0,
                 Direction::Down => f32::consts::PI,
             };
@@ -30,9 +30,9 @@ impl crate::geometry::Orientation {
             },
             Direction::West => {
                 let roll = match ori.normal() {
-                Direction::North => f32::consts::FRAC_PI_2,
+                Direction::North => -f32::consts::FRAC_PI_2,
                 Direction::West => todo!(),
-                Direction::South => -f32::consts::FRAC_PI_2,
+                Direction::South => f32::consts::FRAC_PI_2,
                 Direction::East => todo!(),
                 Direction::Up => 0.0,
                 Direction::Down => f32::consts::PI,
@@ -43,9 +43,9 @@ impl crate::geometry::Orientation {
             Direction::South => {
                 let roll = match ori.normal() {
                 Direction::North => todo!(),
-                Direction::West => f32::consts::FRAC_PI_2,
+                Direction::West => -f32::consts::FRAC_PI_2,
                 Direction::South => todo!(),
-                Direction::East => -f32::consts::FRAC_PI_2,
+                Direction::East => f32::consts::FRAC_PI_2,
                 Direction::Up => 0.0,
                 Direction::Down => f32::consts::PI,
             };
@@ -54,9 +54,9 @@ impl crate::geometry::Orientation {
         }
             Direction::East => {
                 let roll = match ori.normal() {
-                Direction::North => -f32::consts::FRAC_PI_2,
+                Direction::North => f32::consts::FRAC_PI_2,
                 Direction::West => todo!(),
-                Direction::South => f32::consts::FRAC_PI_2,
+                Direction::South => -f32::consts::FRAC_PI_2,
                 Direction::East => todo!(),
                 Direction::Up => 0.0,
                 Direction::Down => f32::consts::PI,

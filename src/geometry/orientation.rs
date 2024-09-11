@@ -37,8 +37,8 @@ impl Turnable for Orientation {
             super::trait_turn::Turn::Right => Orientation{forward: Direction::rt(&self.forward, &self.normal), normal: self.normal},
             super::trait_turn::Turn::Up => Orientation{forward: self.normal, normal: self.forward.rev()},
             super::trait_turn::Turn::Down => Orientation{forward: self.normal.rev(), normal: self.forward},
-            super::trait_turn::Turn::RollLeft => Orientation{forward: self.forward, normal: Direction::rt(&self.forward, &self.normal)},
-            super::trait_turn::Turn::RollRight =>  Orientation{forward: self.forward, normal: Direction::lt(&self.forward, &self.normal)},
+            super::trait_turn::Turn::RollLeft => Orientation{forward: self.forward, normal: Direction::lt(&self.forward, &self.normal)},
+            super::trait_turn::Turn::RollRight =>  Orientation{forward: self.forward, normal: Direction::rt(&self.forward, &self.normal)},
             super::trait_turn::Turn::Front => self.clone(),
             super::trait_turn::Turn::Back => Orientation{forward: self.forward.rev(), normal: self.normal},
         }
