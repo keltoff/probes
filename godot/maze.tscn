@@ -32,6 +32,8 @@ func _input(event):
 		self.reset()
 	if event.is_action_pressed(\"Interact\"):
 		self.bonk()
+	if event.is_action_pressed(\"Switch\"):
+		$Torch.visible = not $Torch.visible
 
 	#print(self.transform)
 	#$LabelPos.text = self.transform;
