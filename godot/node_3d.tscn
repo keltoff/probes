@@ -1,0 +1,117 @@
+[gd_scene load_steps=7 format=3 uid="uid://bavxhshgx2cko"]
+
+[ext_resource type="Script" path="res://global.gd" id="1_m8r6n"]
+[ext_resource type="Material" uid="uid://d2bw25f21qhcs" path="res://wall_material.tres" id="2_6j2x2"]
+
+[sub_resource type="GDScript" id="GDScript_lisen"]
+script/source = "extends Probe
+
+func _ready():
+	self.reset()
+
+func _input(event):
+	if event.is_action_pressed(\"Fwd\"):
+		self.forward()
+	if event.is_action_pressed(\"Left\"):
+		self.left()
+	if event.is_action_pressed(\"Right\"):
+		self.right()
+	if event.is_action_pressed(\"Up\"):
+		self.up()
+	if event.is_action_pressed(\"Down\"):
+		self.down()
+	if event.is_action_pressed(\"Reset\"):
+		self.reset()
+
+	#print(self.transform)
+	#$LabelPos.text = self.transform;
+"
+
+[sub_resource type="GDScript" id="GDScript_n7b7l"]
+resource_name = "Looking"
+script/source = "extends Camera3D
+
+var max_angle = 90;
+var turning_speed = 90;  #  deg per second
+
+var rest_horizontal = self.rotation_degrees.y;
+var rest_vertical = self.rotation_degrees.x;
+var target_angle_horizontal = 0.;
+var target_angle_vertical = 0.;
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	var angle = delta * turning_speed;
+	
+	self.rotation_degrees.y += clamp(target_angle_horizontal - self.rotation_degrees.y +rest_horizontal, -angle, angle);
+	self.rotation_degrees.x += clamp(target_angle_vertical - self.rotation_degrees.x +rest_vertical, -angle, angle);
+
+func _input(_event):
+	target_angle_vertical = 0.;
+	if Input.is_action_pressed(\"LookDown\"):
+		target_angle_vertical -= max_angle;
+	if Input.is_action_pressed(\"LookUp\"):
+		target_angle_vertical += max_angle;
+
+	target_angle_horizontal = 0.;
+	if Input.is_action_pressed(\"LookLeft\"):
+		target_angle_horizontal += max_angle;
+	if Input.is_action_pressed(\"LookRight\"):
+		target_angle_horizontal -= max_angle;
+"
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2bkjy"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_2ilek"]
+inner_radius = 0.2
+outer_radius = 0.6
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_m8r6n")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.253454, -0.551662, -0.794626, 0.967347, 0.144541, 0.208199, 0, -0.821448, 0.570284, 0, 0, 0)
+visible = false
+
+[node name="Probe" type="Probe" parent="."]
+script = SubResource("GDScript_lisen")
+
+[node name="Camera" type="Camera3D" parent="Probe"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+current = true
+fov = 120.0
+script = SubResource("GDScript_n7b7l")
+
+[node name="Mesh" type="MeshInstance3D" parent="Probe"]
+transform = Transform3D(-4.37114e-08, 0.7, -4.37114e-08, 0, -3.0598e-08, -1, -1, -3.0598e-08, 1.91069e-15, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_2bkjy")
+
+[node name="Tail" type="MeshInstance3D" parent="Probe"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.5, 0, 0)
+mesh = SubResource("TorusMesh_2ilek")
+
+[node name="Torch" type="SpotLight3D" parent="Probe"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+light_color = Color(1.49205e-06, 0.786021, 0.18892, 1)
+spot_range = 10.0
+spot_angle = 60.0
+
+[node name="TopView" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 15, 0)
+visible = false
+
+[node name="MapNode" type="MapNode" parent="."]
+command_string = "3l2l1"
+material_override = ExtResource("2_6j2x2")
+
+[node name="LabelPos" type="Label" parent="."]
+offset_left = 35.0
+offset_top = 40.0
+offset_right = 280.0
+offset_bottom = 63.0
+text = "Pos:
+"
