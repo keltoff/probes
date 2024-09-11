@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bavxhshgx2cko"]
 
-[ext_resource type="Script" path="res://global.gd" id="1_m8r6n"]
-[ext_resource type="Material" uid="uid://d2bw25f21qhcs" path="res://wall_material.tres" id="2_6j2x2"]
+[ext_resource type="Script" path="res://global.gd" id="1_7nmve"]
+[ext_resource type="Material" uid="uid://d2bw25f21qhcs" path="res://wall_material.tres" id="2_f5y5r"]
 
 [sub_resource type="GDScript" id="GDScript_lisen"]
 script/source = "extends Probe
@@ -11,7 +11,10 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed(\"Fwd\"):
-		self.forward()
+		#self.forward()
+		self.move_smooth(\"Front\")
+	if event.is_action_pressed(\"Bwd\"):
+		self.backward()
 	if event.is_action_pressed(\"Left\"):
 		self.left()
 	if event.is_action_pressed(\"Right\"):
@@ -20,6 +23,11 @@ func _input(event):
 		self.up()
 	if event.is_action_pressed(\"Down\"):
 		self.down()
+	if event.is_action_pressed(\"RollLeft\"):
+		self.roll_left()
+	if event.is_action_pressed(\"RollRight\"):
+		self.roll_right()
+		
 	if event.is_action_pressed(\"Reset\"):
 		self.reset()
 
@@ -71,7 +79,7 @@ inner_radius = 0.2
 outer_radius = 0.6
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource("1_m8r6n")
+script = ExtResource("1_7nmve")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.253454, -0.551662, -0.794626, 0.967347, 0.144541, 0.208199, 0, -0.821448, 0.570284, 0, 0, 0)
@@ -106,7 +114,7 @@ visible = false
 
 [node name="MapNode" type="MapNode" parent="."]
 command_string = "3l2l1"
-material_override = ExtResource("2_6j2x2")
+material_override = ExtResource("2_f5y5r")
 
 [node name="LabelPos" type="Label" parent="."]
 offset_left = 35.0
