@@ -13,8 +13,16 @@ func _input(event):
 	%LabelPos.set_text(str(self.transform));
 	
 	if event.is_action_pressed(\"Fwd\"):
-		#self.forward()
-		self.move_smooth(\"Front\")
+		var target = self.target_pos(\"Front\")
+		print(\"Pos%s target %s [b: %s, w: %s]\" % [self.position, target, %MapNode.is_blocked(target), %MapNode.is_walkable(target)] )
+		if %MapNode.is_walkable(target):
+			self.move_smooth(\"Front\")
+		elif %MapNode.is_blocked(target):
+			self.up()
+		else:
+			self.bonk()
+	#self.forward()
+		
 	if event.is_action_pressed(\"Bwd\"):
 		self.backward()
 	if event.is_action_pressed(\"Left\"):
@@ -26,9 +34,15 @@ func _input(event):
 	if event.is_action_pressed(\"Down\"):
 		self.down()
 	if event.is_action_pressed(\"RollLeft\"):
-		self.roll_left()
+		if %MapNode.is_walkable(self.target_pos(\"RollLeft\")):
+			self.roll_left()
+		else:
+			pass # self.bonk(\"RollLeft\")
 	if event.is_action_pressed(\"RollRight\"):
-		self.roll_right()
+		if %MapNode.is_walkable(self.target_pos(\"RollRight\")):
+			self.roll_right()
+		else:
+			pass # self.bonk(\"RollRight\")
 		
 	if event.is_action_pressed(\"Reset\"):
 		self.reset()
@@ -125,6 +139,7 @@ visible = false
 
 [node name="MapNode" type="MapNode" parent="."]
 command_string = "3l2l1"
+unique_name_in_owner = true
 material_override = ExtResource("2_f5y5r")
 
 [node name="LabelPos" type="Label" parent="."]

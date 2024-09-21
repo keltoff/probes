@@ -1,4 +1,7 @@
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+use godot::prelude::{Export, GodotConvert, Var};
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, GodotConvert, Var, Export)]
+#[godot(via=i32)]
 pub enum Direction {
     North,
     West,

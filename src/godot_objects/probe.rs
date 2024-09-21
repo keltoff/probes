@@ -1,7 +1,7 @@
 
 use godot::prelude::*;
 use godot::classes::Node3D;
-use crate::geometry::{MakeTurnable, OrientedPosition as Pos, Turn};
+use crate::geometry::{MakeTurnable, OrientedPosition as Pos, Turn, Turnable};
 use crate::godot_objects::motion::Motion;
 
 #[derive(GodotClass)]
@@ -44,6 +44,14 @@ impl Probe {
 
         let transform = self.position.to_transform();
         self.base_mut().set_transform(transform);
+    }
+
+    #[func]
+    fn target_pos(&self, turn: Turn) -> Pos {
+        match turn {
+            Turn::RollLeft | Turn::RollRight => self.position.turned(turn),
+            _ => self.position.shifted(turn)
+        }
     }
 
     #[func]

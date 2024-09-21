@@ -58,5 +58,3 @@ impl fmt::Display for Orientation {
         write!(f, "{}_{}", self.forward.to_string(), self.normal.to_string())
     }
 }
-
-

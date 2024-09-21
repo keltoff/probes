@@ -2,6 +2,7 @@
 use godot::prelude::*;
 use godot::classes::mesh::PrimitiveType;
 use godot::classes::{IMeshInstance3D, MeshInstance3D, SurfaceTool};
+use crate::geometry::{OrientedPosition, Turnable};
 use crate::{geometry::{Direction, Position}, map_container::{build_map, MapContainer}};
 //use itertools::Itertools;
 
@@ -32,6 +33,22 @@ impl IMeshInstance3D for MapNode {
 
 #[godot_api]
 impl MapNode {
+    #[func]
+    pub fn is_blocked(&self, pos: OrientedPosition) -> bool {
+        match &self.map {
+            Some(map) => !map.any(pos.position),
+            None => false,
+        }
+    }
+
+    #[func]
+    pub fn is_walkable(&self, pos: OrientedPosition) -> bool {
+        match &self.map {
+            Some(map) => map.any(pos.position) && !map.any(pos.shifted(crate::geometry::Turn::Down).position),
+            None => false,
+        }
+    }
+
     fn build_mesh(&mut self, command_line: String) {
         self.map = Some(build_map(command_line));
 
