@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bavxhshgx2cko"]
+[gd_scene load_steps=9 format=3 uid="uid://bavxhshgx2cko"]
 
 [ext_resource type="Script" path="res://global.gd" id="1_7nmve"]
 [ext_resource type="Material" uid="uid://d2bw25f21qhcs" path="res://wall_material.tres" id="2_f5y5r"]
@@ -10,11 +10,11 @@ func _ready():
 	self.reset()
 
 func _input(event):
-	%LabelPos.set_text(str(self.transform));
-	
+
 	if event.is_action_pressed(\"Fwd\"):
 		var target = self.target_pos(\"Front\")
-		print(\"Pos%s target %s [b: %s, w: %s]\" % [self.position, target, %MapNode.is_blocked(target), %MapNode.is_walkable(target)] )
+		# print(\"Pos%s target %s [b: %s, w: %s]\" % [self.position, target, %MapNode.is_blocked(target), %MapNode.is_walkable(target)] )
+		
 		if %MapNode.is_walkable(target):
 			self.move_smooth(\"Front\")
 		elif %MapNode.is_blocked(target):
@@ -95,6 +95,16 @@ func _input(_event):
 inner_radius = 0.2
 outer_radius = 0.6
 
+[sub_resource type="GDScript" id="GDScript_jjcpd"]
+resource_name = "update_pos"
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _on_probe_probe_on_position(name, pos, x, y, z):
+	self.text = \"%s: [%s, %s, %s]\" % [name, x, y, z];
+"
+
 [sub_resource type="GDScript" id="GDScript_ahata"]
 script/source = "extends Control
 
@@ -143,13 +153,13 @@ unique_name_in_owner = true
 material_override = ExtResource("2_f5y5r")
 
 [node name="LabelPos" type="Label" parent="."]
-unique_name_in_owner = true
 offset_left = 35.0
 offset_top = 40.0
 offset_right = 280.0
 offset_bottom = 63.0
 text = "Pos:
 "
+script = SubResource("GDScript_jjcpd")
 
 [node name="LabelControlSwitch" type="Label" parent="."]
 offset_left = 862.0

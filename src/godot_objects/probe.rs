@@ -44,6 +44,13 @@ impl Probe {
 
         let transform = self.position.to_transform();
         self.base_mut().set_transform(transform);
+
+        let pos = self.position.clone();
+        self.base_mut().emit_signal("probe_on_position".into(), &["MeMe".to_variant(),
+            pos.to_variant(),
+            pos.position.x.to_variant(),
+            pos.position.y.to_variant(),
+            pos.position.z.to_variant()]);
     }
 
     #[func]
@@ -76,6 +83,9 @@ impl Probe {
             },
         }
     }
+
+    #[signal]
+    fn probe_on_position(name: GString, pos: Pos, x: i32, y: i32, z: i32);
 
     #[func]
     fn forward(&mut self) {
