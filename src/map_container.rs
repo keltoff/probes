@@ -12,7 +12,7 @@ pub struct MapContainer<RoomData> {
 }
 
 impl<RoomData> MapContainer<RoomData> {
-    fn set(&mut self, position : &Position, value : RoomData) {
+    pub fn set(&mut self, position : &Position, value : RoomData) {
         self.data.insert(*position, value);
         self.x_range.add(position.x);
         self.y_range.add(position.y);
@@ -40,7 +40,7 @@ impl<RoomData> MapContainer<RoomData> {
     }
 }
 
-impl<RoomData> MapContainer<RoomData>  {
+impl<RoomData> MapContainer<RoomData> where RoomData: Clone  {
     /*
     pub fn for_slice(&self, pos: &Position, op : &dyn FnMut(Option<RoomData>) -> () ) {
         for x in self.x_range.iter() {
@@ -101,7 +101,31 @@ impl<RoomData> MapContainer<RoomData>  {
         
     }
 
-    /*
+    pub fn iter_around(&self, pos: Pos, radius: i16) -> Vec<(i16, i16, Option<RoomData>)>
+    {
+        let mut result = Vec::<(i16, i16, Option<RoomData>)>::new();
+        let left_shift = PosDelta::from(pos.orientation.left());
+        let top_shift = PosDelta::from(pos.orientation);
+
+        /*
+        let map_access = move |u: u16, v:u16| {
+            let target = pos.position + left_shift * (u-radius).into() + top_shift * (v - radius).into();
+            self.data.get(&target)
+        };
+         */
+        
+        for u in -radius..radius+1 {
+            for v in -radius..radius+1 {
+                let target = pos.position + left_shift * u.into() + top_shift * v.into();
+                result.push((-u, -v, self.data.get(&target).cloned()));
+            }
+        };
+
+        result
+    }
+
+/*
+    
     pub fn iter_around(&self, pos: Pos, radius: u16) -> MapIterator<Option<&RoomData>>
     {
         let left_shift = PosDelta::from(pos.orientation.left());
@@ -114,6 +138,8 @@ impl<RoomData> MapContainer<RoomData>  {
         
         MapIterator::new(2*radius+1, 2*radius+1, &map_access)
     }
+
+    
 
 
     pub fn print_map_iter<T>(map_iter: MapIterator<Option<T>>) {

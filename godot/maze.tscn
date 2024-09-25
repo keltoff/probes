@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bavxhshgx2cko"]
+[gd_scene load_steps=12 format=3 uid="uid://bavxhshgx2cko"]
 
 [ext_resource type="Script" path="res://global.gd" id="1_7nmve"]
 [ext_resource type="Material" uid="uid://d2bw25f21qhcs" path="res://wall_material.tres" id="2_f5y5r"]
+[ext_resource type="Texture2D" uid="uid://cqg3fkbs80opd" path="res://images/neon_border_small.png" id="3_jycee"]
+[ext_resource type="Texture2D" uid="uid://cfs3nkd5x5m5a" path="res://images/arrow_small.png" id="4_nk2py"]
 
 [sub_resource type="GDScript" id="GDScript_lisen"]
 script/source = "extends Probe
@@ -101,8 +103,8 @@ script/source = "extends Label
 
 
 # Called when the node enters the scene tree for the first time.
-func _on_probe_probe_on_position(name, pos, x, y, z):
-	self.text = \"%s: [%s, %s, %s]\" % [name, x, y, z];
+func _on_probe_probe_on_position(probe_name, _pos, x, y, z):
+	self.text = \"%s: [%s, %s, %s]\" % [probe_name, x, y, z];
 "
 
 [sub_resource type="GDScript" id="GDScript_ahata"]
@@ -113,6 +115,19 @@ func _input(event):
 		self.visible = !self.visible;
 "
 
+[sub_resource type="GDScript" id="GDScript_h6v0m"]
+resource_name = "update_minimap"
+script/source = "extends MiniMapControl
+
+func _on_probe_probe_on_position(_name, pos, _x, _y, _z):
+	self.set_map_square(pos, true);
+	
+	var front = %Probe.target_pos(\"Front\");
+	self.set_map_square(front, %MapNode.is_walkable(front));
+	
+	self.set_origin(pos);
+"
+
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_7nmve")
 
@@ -121,6 +136,7 @@ transform = Transform3D(0.253454, -0.551662, -0.794626, 0.967347, 0.144541, 0.20
 visible = false
 
 [node name="Probe" type="Probe" parent="."]
+unique_name_in_owner = true
 script = SubResource("GDScript_lisen")
 
 [node name="Camera" type="Camera3D" parent="Probe"]
@@ -197,3 +213,48 @@ Reset pos:		R"
 position = Vector2(24, 55)
 points = PackedVector2Array(0, 0, 200, 0)
 width = 2.0
+
+[node name="MiniMap" type="MarginContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -472.0
+offset_top = -327.0
+offset_right = -38.0
+offset_bottom = -35.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MiniMap"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MiniMapControl" type="MiniMapControl" parent="MiniMap/MarginContainer"]
+field_size = 20
+clip_contents = true
+layout_mode = 2
+script = SubResource("GDScript_h6v0m")
+
+[node name="Border" type="NinePatchRect" parent="MiniMap"]
+layout_mode = 2
+texture = ExtResource("3_jycee")
+region_rect = Rect2(3.5968, 2.86662, 122.834, 86.2133)
+patch_margin_left = 18
+patch_margin_top = 19
+patch_margin_right = 20
+patch_margin_bottom = 20
+
+[node name="TextureRect" type="TextureRect" parent="MiniMap"]
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_nk2py")
+
+[connection signal="probe_on_position" from="Probe" to="LabelPos" method="_on_probe_probe_on_position"]
+[connection signal="probe_on_position" from="Probe" to="MiniMap/MarginContainer/MiniMapControl" method="_on_probe_probe_on_position"]
